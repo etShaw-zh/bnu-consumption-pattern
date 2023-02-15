@@ -1,24 +1,32 @@
 {
     "manifest_version": 3,
     "name": "bnu-consumption-pattern",
-    "description": "Plug-in for mining consumption patterns for students at Beijing Normal University",
     "version": "0.0.1",
+    "description": "Plug-in for mining consumption patterns for students at Beijing Normal University",
+    "author": "Shaw",
     "background": {
         "service_worker": "/background.js"
     },
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "icons": {
+            "16": "/favicon.ico"
+        }
     },
     "content_scripts": [
         {
-            "matches": [
-                "<all_urls>"
-            ],
-            "js": [
-                "/content.js"
-            ]
+            "matches": ["*://card.bnu.edu.cn/CardManage/*"],
+            "js": ["/content.js"],
+            "run_at": "document_end"
         }
     ],
     "options_page": "options.html",
-    "devtools_page": "devtools.html"
+    "devtools_page": "devtools.html",
+    "permissions": [
+        "*://card.bnu.edu.cn/CardManage/*",
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "activeTab"
+    ]
 }

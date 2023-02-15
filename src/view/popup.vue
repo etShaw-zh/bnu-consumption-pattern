@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     close () {
-      this.msg = 'click close button'
+      this.msg = 'click close button ~~~'
     }
   }
 }

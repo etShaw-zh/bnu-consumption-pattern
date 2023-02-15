@@ -4,14 +4,14 @@ const fs = require('fs')
 // Generate pages object
 const pages = {}
 
-function getEntryFile (entryPath) {
+function getEntryFile(entryPath) {
   let files = fs.readdirSync(entryPath)
   return files
 }
 
 const chromeName = getEntryFile(path.resolve(`src/entry`))
 
-function getFileExtension (filename) {
+function getFileExtension(filename) {
   return /[.]/.exec(filename) ? /[^.]+$/.exec(filename)[0] : undefined
 }
 chromeName.forEach((name) => {
@@ -25,7 +25,7 @@ chromeName.forEach((name) => {
 })
 
 const isDevMode = process.env.NODE_ENV === 'development'
-
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin"); // Add this to fix the error about Crawler
 module.exports = {
   pages,
   filenameHashing: false,
@@ -46,6 +46,11 @@ module.exports = {
     ])
   },
   configureWebpack: {
+    plugins: [new NodePolyfillPlugin()], // Add this to fix the error about Crawler
+    externals: {
+      fs: require('fs'), // Add this to fix the error about Crawler
+      http2: require('http2'), // Add this to fix the error about Crawler
+    },
     output: {
       filename: `[name].js`,
       chunkFilename: `[name].js`
