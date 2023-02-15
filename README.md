@@ -1,5 +1,14 @@
 # bnu-consumption-pattern
 
+### Demo 
+
+![over view](/images/overview.png)
+
+![history](/images/history.png)
+
+![report](/images/report.png)
+
+
 ### Create this project
 
 ```
