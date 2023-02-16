@@ -10,7 +10,10 @@
     "action": {
         "default_popup": "popup.html",
         "icons": {
-            "16": "/favicon.ico"
+            "16": "/icon.png",
+            "32": "/icon.png",
+            "48": "/icon.png",
+            "128": "/icon.png"
         }
     },
     "content_scripts": [
@@ -20,6 +23,10 @@
             "run_at": "document_end"
         }
     ],
+    "content_security_policy": {
+        "script-src": ["'self'", "'unsafe-eval'"],
+        "object-src": ["'self'"]
+    },
     "options_page": "options.html",
     "devtools_page": "devtools.html",
     "permissions": [

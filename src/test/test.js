@@ -314,35 +314,56 @@ const df = new dataForge.DataFrame(
     ]
 );
 
-const dfByMerchant = df.groupBy(consumption => consumption.merchant);
-// const dfByMerchantFiltered = dfByMerchant.filter(row => row.amount >= 0 ); // Filter so we only have amount figures greater than 0.
-var dfByMerchantRes = {
-    'merchant': [],
-    'total': [],
-    'mean': [],
-    'std':  []
-}
-for (const dfByMerchantGroup of dfByMerchant) {
-    // ... do something with each product group ...
-    const merchant = dfByMerchantGroup.first().merchant;
-    const totalMerchantForProduct = dfByMerchantGroup.deflate(consumption => consumption.amount).sum();
-    const meanMerchantForProduct = dfByMerchantGroup.deflate(consumption => consumption.amount).mean();
-    const stdMerchantForProduct = dfByMerchantGroup.deflate(consumption => consumption.amount).std();
-    dfByMerchantRes.merchant.push(merchant)
-    dfByMerchantRes.total.push(totalMerchantForProduct)
-    dfByMerchantRes.mean.push(meanMerchantForProduct)
-    dfByMerchantRes.std.push(stdMerchantForProduct)
-}
-// console.log(dfByMerchantRes)
 
-var data = []
-for (var i = 0; i < dfByMerchantRes.merchant.length; i++) {
-    data.push({
-        merchant: dfByMerchantRes.merchant[i] === '' ? '充值' : dfByMerchantRes.merchant[i],
-        total: dfByMerchantRes.total[i],
-        mean: dfByMerchantRes.mean[i],
-        std: dfByMerchantRes.std[i]
-    })
-}
-const dfData = new dataForge.DataFrame(data);
-console.log(dfData.toHTML())
+// const dfByMerchant = df.groupBy(consumption => consumption.merchant);
+// var data = []
+// for (const dfByMerchantGroup of dfByMerchant) {
+//     const merchant = dfByMerchantGroup.first().merchant;
+//     if (merchant === '') { continue } // skip recharge
+//     const totalMerchantForProduct = dfByMerchantGroup.deflate(consumption => consumption.amount).sum();
+//     const meanMerchantForProduct = dfByMerchantGroup.deflate(consumption => consumption.amount).mean();
+//     const stdMerchantForProduct = dfByMerchantGroup.deflate(consumption => consumption.amount).std();
+//     const countMerchantForProduct = dfByMerchantGroup.deflate(consumption => consumption.amount).count();
+//     data.push({
+//         // '商户': merchant === '' ? '充值' : merchant,
+//         '商户': merchant,
+//         '汇总': totalMerchantForProduct.toFixed(2),
+//         '均值': meanMerchantForProduct.toFixed(2),
+//         '标准差': stdMerchantForProduct.toFixed(2),
+//         '笔数': countMerchantForProduct
+//     })
+// }
+// const dfData = new dataForge.DataFrame(data);
+// const orderedDfData = dfData.orderByDescending(row => row.笔数);
+// console.log(orderedDfData.toHTML())
+
+
+// df.forEach(row => {
+//     // console.log(new Date(row.time).toLocaleDateString().split('/')[2]) // 2020/2/7
+//     console.log(new Date(row.time).toLocaleTimeString().substring(0, 2)) // 17:35:03
+//     // console.log(row.time.substring(0, 9)) // 2020/2/17, 2020/2/7
+// });
+// // console.log(df.toHTML())
+
+
+// function produceNewColumns (inputRow) {
+//     const newColumns = {
+//         // ... specify new columns and their values based on the input row ...
+//         'year': inputRow.time.split('/')[0],
+//         'month': inputRow.time.split('/')[1],
+//         'day': inputRow.time.split('/')[2].split(' ')[0],
+//         'hour': new Date(inputRow.time).toLocaleTimeString().substring(0, 2),
+//     };
+
+//     return newColumns;
+// };
+
+// console.log(df.generateSeries(row => produceNewColumns(row)).toHTML())
+console.log(df.generateSeries(row => {
+    return {
+        'year': row.time.split('/')[0],
+        'month': row.time.split('/')[1],
+        'day': row.time.split('/')[2].split(' ')[0],
+        'hour': new Date(row.time).toLocaleTimeString().substring(0, 2),
+    }
+}).toJSON())

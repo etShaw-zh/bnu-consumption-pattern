@@ -38,8 +38,12 @@ module.exports = {
             to: `${path.resolve('dist')}/manifest.json`
           },
           {
-            from: path.resolve(`public/`),
-            to: `${path.resolve('dist')}/`
+            from: path.resolve(`src/tools/api.js`),
+            to: `${path.resolve('dist')}/api.js`
+          },
+          {
+            from: path.resolve(`src/assets/icon.png`),
+            to: `${path.resolve('dist')}/icon.png`
           }
         ]
       }
