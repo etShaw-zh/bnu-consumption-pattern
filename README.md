@@ -7,15 +7,8 @@
 #### 原系统
 ![orign](images/orign.png)
 
-#### 新增 获取数据 和 生成报表 按钮
-![over view](/images/overview.png)
-
-#### 查询历史数据
-![history](/images/history.png)
-
-#### 生成描述性统计报表
-![report](/images/report.png)
-
+#### 视频
+![video](images/BNU%E6%B6%88%E8%B4%B9%E8%AE%B0%E5%BD%95%E4%BC%A0Helper%E6%BC%94%E7%A4%BA.webm)
 
 ### Create this project
 
