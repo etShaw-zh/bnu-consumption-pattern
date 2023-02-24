@@ -8,7 +8,7 @@
 ![orign](images/orign.png)
 
 #### 视频
-![video](images/BNU%E6%B6%88%E8%B4%B9%E8%AE%B0%E5%BD%95%E4%BC%A0Helper%E6%BC%94%E7%A4%BA.webm)
+![video](images/BNU消费查询Helper.gif)
 
 ### Create this project
 
