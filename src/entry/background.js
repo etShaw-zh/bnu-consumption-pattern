@@ -1,12 +1,4 @@
 
-fetch('http://card.bnu.edu.cn/CardManage/CardInfo/TrjnList?beginTime=2023-02-01&endTime=2023-02-28&type=1&pageindex=2').then(res => {
-    return res.text();
-}).then(res => {
-    console.log(res);
-});
-
-
-
 console.log('hello world background todo something~')
 
 // chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {

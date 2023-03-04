@@ -30,6 +30,44 @@ echarts.use([
 console.log('hello world content todo something~')
 var tableData = [];
 
+// 
+var tableDataPageTotal = 0;
+var tableDataCurrentPage = 0;
+
+// add process bar
+var processBar = document.createElement('div')
+processBar.id = 'processBar'
+processBar.style.width = '100%'
+processBar.style.height = '20px'
+processBar.style.background = '#ebeef5'
+processBar.style.borderRadius = '4px'
+processBar.style.marginTop = '10px'
+processBar.style.marginBottom = '10px'
+processBar.style.position = 'relative'
+var processBarInner = document.createElement('div')
+processBarInner.id = 'processBarInner'
+processBarInner.style.width = '0%'
+processBarInner.style.height = '100%'
+processBarInner.style.background = '#409EFF'
+processBarInner.style.borderRadius = '4px'
+processBarInner.style.position = 'absolute'
+processBarInner.style.left = '0'
+processBarInner.style.top = '0'
+processBar.appendChild(processBarInner)
+
+// add process bar text
+var processBarText = document.createElement('div')
+processBarText.id = 'processBarText'
+processBarText.style.position = 'absolute'
+processBarText.style.left = '50%'
+processBarText.style.top = '50%'
+processBarText.style.transform = 'translate(-50%, -50%)'
+processBarText.style.color = '#fff'
+processBarText.style.fontSize = '14px'
+processBarText.innerText = '0%'
+processBar.appendChild(processBarText)
+
+
 // Create a button to get the data
 let getDataBtn = document.createElement('button')
 getDataBtn.innerText = '获取数据'
@@ -48,21 +86,36 @@ getDataBtn.style.marginBottom = "0"
 getDataBtn.style.textAlign = "center"
 getDataBtn.style.cursor = "pointer"
 getDataBtn.onclick = function (event) {
+
     tableData = [];
     tableData = tableData.concat(extractCurrentPageTableData());
-    // Start observing changes to the body element
-    observer.observe(document.body, {
+
+    // add process bar to the page
+    document.getElementsByClassName('searcharea')[0].appendChild(processBar)
+
+    // get total page count and current page
+    tableDataCurrentPage = parseInt(document.getElementsByClassName('active')[1].innerText)
+    tableDataPageTotal = parseInt(
+        document.getElementsByClassName('pagination')[0]
+            .children[document.getElementsByClassName('pagination')[0]
+                .children.length - 2].innerText
+    );
+
+    document.getElementsByClassName('next')[1].children[0].click()
+
+    observer.observe(document.getElementById('trjnListDiv'), {
         childList: true,
         subtree: true,
         characterData: true,
+        // attributes:true,
+        // attributeFilter: ['style', 'display']
     });
-    document.getElementsByClassName('next')[1].children[0].click()
+
     event.preventDefault();
 }
 // Append the button to the page
 // document.getElementsByClassName('searcharea')[0].appendChild(getDataBtn)
 document.getElementsByClassName('col-md-12')[1].appendChild(getDataBtn)
-
 
 // Create a button to generate the report
 let generateReportBtn = document.createElement('button')
@@ -82,9 +135,11 @@ generateReportBtn.style.marginBottom = "0"
 generateReportBtn.style.textAlign = "center"
 generateReportBtn.style.cursor = "pointer"
 generateReportBtn.onclick = function (event) {
-    // Stop observing changes to the body element
-    observer.disconnect();
-
+    if (0 === tableData.length) {
+        alert('请先点击获取数据按钮！');
+        event.preventDefault();
+        return 0;
+    }
     const describContainer = document.createElement('div');
     describContainer.innerHTML = analysisTableData(tableData);
     describContainer.className = 'query table-scrollable no-wrap';
@@ -109,8 +164,19 @@ document.getElementsByClassName('col-md-12')[1].appendChild(generateReportBtn)
 // Create a MutationObserver to detect changes to the DOM tree
 const observer = new MutationObserver(() => {
     tableData = tableData.concat(extractCurrentPageTableData())
+    // current page
+    tableDataCurrentPage = parseInt(document.getElementsByClassName('active')[1].innerText)
     // hiden data display table
     document.getElementById('trjnListDiv').children[0].children[1].style.display = 'none'
+    document.getElementsByClassName('pagenav')[0].style.display = 'none'
+    processBarText.innerText = Math.round(tableDataCurrentPage / tableDataPageTotal * 100) + '%'
+    processBarInner.style.width = Math.round(tableDataCurrentPage / tableDataPageTotal * 100) + '%'
+    if (tableDataCurrentPage === tableDataPageTotal) {
+        // Stop observing changes to the body element
+        observer.disconnect();
+        // get last page table data
+        tableData = tableData.concat(extractCurrentPageTableData());
+    }
     document.getElementsByClassName('next')[1].children[0].click()
 });
 
@@ -161,8 +227,8 @@ function extractCurrentPageTableData() {
             time: row.querySelector('td:first-child').textContent.trim(),
             merchant: row.querySelector('td:nth-child(2)').textContent.trim(),
             type: row.querySelector('td:nth-child(3)').textContent.trim(),
-            amount: Number(row.querySelector('td:nth-child(4)').textContent.trim().replace('￥-', '')),
-            balance: Number(row.querySelector('td:nth-child(5)').textContent.trim().replace('￥', ''))
+            amount: Number(row.querySelector('td:nth-child(4)').textContent.trim().replace('￥-', '')) ? Number(row.querySelector('td:nth-child(4)').textContent.trim().replace('￥-', '')) : 0,
+            balance: Number(row.querySelector('td:nth-child(5)').textContent.trim().replace('￥', '')) ? Number(row.querySelector('td:nth-child(5)').textContent.trim().replace('￥', '')) : 0,
         };
 
         // Push the data to the global array
@@ -207,6 +273,68 @@ function updateTableDataTime(tableData) {
 }
 
 /**
+ * 
+ * @param {*} dateStr
+ * @param {*} holidays
+ * @returns
+ * @example
+*/
+// function isHoliday(dateStr, holidays) {
+//     // 将日期字符串转换为日期对象
+//     const date = new Date(dateStr);
+    
+//     // 判断是否为周六或周日
+//     if (date.getDay() === 0 || date.getDay() === 6) {
+//       return true;
+//     }
+    
+//     // 在这里添加其他判断日期是否为节假日的逻辑
+//     // 例如，可以根据国家或地区的法定节假日列表进行比较
+    
+//     // 如果以上条件都不符合，则认为该日期不是节假日
+//     return false;
+// }
+
+// fetch('https://timor.tech/api/holiday/year/2021').then(res => {
+//     return res.text();
+// }).then(res => {
+//     console.log(res);
+// });
+
+//- 小写数字转换成大写, 只处理到[0 ~ 99]
+function convertToChinaNum(num) {
+    var arr1 = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+    var arr2 = ['', '十', '百', '千', '万', '十', '百', '千', '亿', '十', '百', '千', '万', '十', '百', '千', '亿'];//可继续追加更高位转换值
+    if (!num || isNaN(num)) {
+        return "零";
+    }
+    var english = num.toString().split("")
+    var result = "";
+    for (var i = 0; i < english.length; i++) {
+        var des_i = english.length - 1 - i;//倒序排列设值
+        result = arr2[i] + result;
+        var arr1_index = english[des_i];
+        result = arr1[arr1_index] + result;
+    }
+    //将【零千、零百】换成【零】 【十零】换成【十】
+    result = result.replace(/零(千|百|十)/g, '零').replace(/十零/g, '十');
+    //合并中间多个零为一个零
+    result = result.replace(/零+/g, '零');
+    //将【零亿】换成【亿】【零万】换成【万】
+    result = result.replace(/零亿/g, '亿').replace(/零万/g, '万');
+    //将【亿万】换成【亿】
+    result = result.replace(/亿万/g, '亿');
+    //移除末尾的零
+    result = result.replace(/零+$/, '')
+    //将【零一十】换成【零十】
+    //result = result.replace(/零一十/g, '零十');//貌似正规读法是零一十
+    //将【一十】换成【十】
+    result = result.replace(/^一十/g, '十');
+    return result;
+}
+
+
+/**
  * Analysis table data
  * @param {*} tableData 
  * @example
@@ -220,6 +348,14 @@ function analysisTableData(tableData) {
     const df = new dataForge.DataFrame(tableData);
     const dfByMerchant = df.groupBy(consumption => consumption.merchant);
     var data = []
+    var total = {
+        '商户': '',
+        '汇总': 0,
+        '均值': 0,
+        '标准差': 0,
+        '笔数': 0
+    }
+    var i = 0;
     for (const dfByMerchantGroup of dfByMerchant) {
         const merchant = dfByMerchantGroup.first().merchant;
         if (merchant === '') { continue } // skip recharge
@@ -234,8 +370,18 @@ function analysisTableData(tableData) {
             '均值': meanMerchantForProduct.toFixed(2),
             '标准差': stdMerchantForProduct.toFixed(2),
             '笔数': countMerchantForProduct
-        })
+        });
+        total['汇总'] += totalMerchantForProduct;
+        total['均值'] += meanMerchantForProduct;
+        total['标准差'] += stdMerchantForProduct;
+        total['笔数'] += countMerchantForProduct;
+        i++;
     }
+    total['商户'] = '汇总' + convertToChinaNum(i) + '家商户';
+    total['汇总'] = total['汇总'].toFixed(2);
+    total['均值'] = (total['均值'] / i).toFixed(2);
+    total['标准差'] = (total['标准差'] / i).toFixed(2);
+    data.push(total);
     const dfData = new dataForge.DataFrame(data);
     const orderedDfData = dfData.orderByDescending(row => row.笔数);
     // console.log(dfData.toHTML())
@@ -279,7 +425,10 @@ function drawMap(chartDom, data) {
         series: [
             {
                 data: data.values,
+                name: '当日消费',
                 type: 'line',
+                symbol: 'none',
+                sampling: 'lttb',
                 smooth: true,
                 markPoint: {
                     data: [
