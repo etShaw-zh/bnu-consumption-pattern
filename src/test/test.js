@@ -1,3 +1,5 @@
+// node test.js
+
 // const Crawler = require('crawler');
 // const c = new Crawler({
 //     maxConnections: 10,
@@ -657,32 +659,93 @@ const tableData = [
 //     }
 // }).toJSON())
 
-function updateTableDataTime(tableData) {
-    const df = new dataForge.DataFrame(tableData);
-    const dfOrderByTime = df.orderBy(row => new Date(row.time).getTime());
-    const dfAddCloumn = dfOrderByTime.generateSeries(row => {
-        return {
-            'yearMonthDay': row.time.split('/')[0] + '-' + row.time.split('/')[1] + '-' + row.time.split('/')[2].split(' ')[0],
-            'year': row.time.split('/')[0],
-            'month': row.time.split('/')[1],
-            'day': row.time.split('/')[2].split(' ')[0],
-            'hour': new Date(row.time).toLocaleTimeString().substring(0, 2),
-        }
-    });
+// function updateTableDataTime(tableData) {
+//     const df = new dataForge.DataFrame(tableData);
+//     const dfOrderByTime = df.orderBy(row => new Date(row.time).getTime());
+//     const dfAddCloumn = dfOrderByTime.generateSeries(row => {
+//         return {
+//             'yearMonthDay': row.time.split('/')[0] + '-' + row.time.split('/')[1] + '-' + row.time.split('/')[2].split(' ')[0],
+//             'year': row.time.split('/')[0],
+//             'month': row.time.split('/')[1],
+//             'day': row.time.split('/')[2].split(' ')[0],
+//             'hour': new Date(row.time).toLocaleTimeString().substring(0, 2),
+//         }
+//     });
 
-    const dfByMerchant = dfAddCloumn.groupBy(consumption => consumption.yearMonthDay);
-    var data = {
-        cats: [],
-        values: []
+//     const dfByMerchant = dfAddCloumn.groupBy(consumption => consumption.yearMonthDay);
+//     var data = {
+//         cats: [],
+//         values: []
+//     }
+//     for (const dfByMerchantGroup of dfByMerchant) {
+//         const yearMonthDay = dfByMerchantGroup.first().yearMonthDay;
+//         const totalMerchantForProduct = dfByMerchantGroup.deflate(consumption => consumption.amount).sum();
+//         data.cats.push(yearMonthDay)
+//         data.values.push(totalMerchantForProduct.toFixed(2))
+//     }
+
+//     return data;
+// }
+
+// console.log(updateTableDataTime(tableData))
+
+
+
+// function isHoliday(dateStr) {
+//     // 将日期字符串转换为日期对象
+//     const date = new Date(dateStr);
+    
+//     // 判断是否为周六或周日
+//     if (date.getDay() === 0 || date.getDay() === 6) {
+//       return true;
+//     }
+    
+//     // 如果以上条件都不符合，则认为该日期不是节假日
+//     return false;
+// }
+
+// function preprocessData(df){
+//     // const df = new dataForge.DataFrame(tableData);
+
+//     const dfAddCloumn = df.generateSeries(row => {
+//         return {
+//             'isHoliday': isHoliday(row.time)
+//         }
+//     });
+
+//     return dfAddCloumn;
+// }
+
+// console.log(preprocessData(df).toHTML())
+
+
+
+// const filtered = df.filter(row => row.merchant != '');
+// console.log(filtered.toArray());
+
+
+// const jStat =  require('jstat');
+// const data1 = [1, 2, 3, 4, 5];
+// const data2 = [5, 6, 7, 8, 9];
+// const significanceLevel = 0.05;
+// const result = jStat.ttest(data1, data2, significanceLevel, 2);
+// console.log(result);
+// console.log(jStat.ttest.toString());
+// Student's sleep data:
+
+var ttest2 = require( '@stdlib/stats-ttest2' );
+
+var x = [ 0.7, -1.6, -0.2, -1.2, -0.1, 3.4, 3.7, 0.8, 0.0, 2.0 ];
+var y = [ 1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4 ];
+
+var out = ttest2( x, y );
+/* e.g., returns
+    {
+        'rejected': false,
+        'pValue': ~0.079,
+        'statistic': ~-1.861,
+        'ci': [ ~-3.365, ~0.205 ],
+        // ...
     }
-    for (const dfByMerchantGroup of dfByMerchant) {
-        const yearMonthDay = dfByMerchantGroup.first().yearMonthDay;
-        const totalMerchantForProduct = dfByMerchantGroup.deflate(consumption => consumption.amount).sum();
-        data.cats.push(yearMonthDay)
-        data.values.push(totalMerchantForProduct.toFixed(2))
-    }
-
-    return data;
-}
-
-console.log(updateTableDataTime(tableData))
+*/
+console.log( out.print() );

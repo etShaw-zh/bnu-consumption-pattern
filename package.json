@@ -9,6 +9,7 @@
     "build-watch": "vue-cli-service  --env.NODE_ENV=development build-watch --mode development"
   },
   "dependencies": {
+    "@stdlib/stats-ttest2": "^0.0.7",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "core-js": "^3.8.3",

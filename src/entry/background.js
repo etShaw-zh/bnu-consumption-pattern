@@ -24,3 +24,34 @@ console.log('hello world background todo something~')
 //     }
 //   });
 
+const STATE_ON = 'ON';
+const STATE_OFF = 'OFF';
+
+chrome.runtime.onInstalled.addListener(() => {
+    console.log('onInstalled');
+    chrome.action.setBadgeText({ text: STATE_OFF });
+});
+
+var scriptExecuted = false;
+
+chrome.action.onClicked.addListener(async (tab) => {
+    console.log('onClicked');
+    const prevState = await chrome.action.getBadgeText({ tabId: tab.id });
+    const nextState = prevState === STATE_ON ? STATE_OFF : STATE_ON;
+
+    await chrome.action.setBadgeText({ text: nextState, tabId: tab.id });
+
+    if (nextState === STATE_ON) {
+        console.log('current state is on');
+        if (!scriptExecuted) {
+            await chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                files: ['/content.js']
+            });
+            scriptExecuted = true;
+        }
+    }
+    console.log(nextState);
+    await chrome.tabs.sendMessage(tab.id, { extension: nextState });
+
+});
