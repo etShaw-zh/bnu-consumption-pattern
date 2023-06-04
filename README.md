@@ -7,6 +7,10 @@
 
 ### Demo 
 
+#### 插件描述
+
+![video](images/%E5%8C%97%E4%BA%AC%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0-%E6%B5%81%E6%B0%B4%E6%9F%A5%E8%AF%A2-Desc.gif)
+
 #### 北京师范大学服务平台-流水查询
 
 ![orign](images/%E5%8C%97%E4%BA%AC%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0-%E6%B5%81%E6%B0%B4%E6%9F%A5%E8%AF%A2.png)
@@ -15,6 +19,3 @@
 
 ![Pro](images/%E5%8C%97%E4%BA%AC%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0-%E6%B5%81%E6%B0%B4%E6%9F%A5%E8%AF%A2-PRO.png)
 
-#### 插件描述
-
-![video](images/%E5%8C%97%E4%BA%AC%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0-%E6%B5%81%E6%B0%B4%E6%9F%A5%E8%AF%A2-Desc.gif)
