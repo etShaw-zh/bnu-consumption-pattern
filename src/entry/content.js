@@ -52,7 +52,7 @@ container.style.height = '100%'
 // add a visitor count image to the container
 var visitorCountImg = document.createElement('div')
 visitorCountImg.id = 'visitorCountImg'
-visitorCountImg.innerHTML = `<image src="https://visitor-badge.laobi.icu/badge?page_id=bnu-comsuption-pattern&left_text=MyExtensionUsers" />`;
+visitorCountImg.innerHTML = `<image src="https://visitor-badge.laobi.icu/badge?page_id=bnu-comsuption-pattern&left_text=ExtensionVisitor" />`;
 container.appendChild(visitorCountImg)
 
 // add a instroduction text title to the container
